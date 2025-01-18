@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 'use client'
 
 import { useState } from 'react'
@@ -16,10 +18,7 @@ export const WaitlistForm = () => {
   const [email, setEmail] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
-  const [errors, setErrors] = useState<{
-    fullname?: string[];
-    email?: string[];
-  }>({});
+  const [errors, setErrors] = useState<any>("");
 
   const validateForm = (): boolean => {
     const formErrors: { fullname?: string[]; email?: string[] } = {};
@@ -55,25 +54,29 @@ export const WaitlistForm = () => {
     try {
       const response = await addToWaitlist(formData);
 
-      if (response.errors) {
-        setErrors(response.errors);
+      if (response.error) {
+        setErrors(response.error);
         toast({
           title: "Oh Oh",
-          description: "Somethig went wrong!",
+          description: response.error as string,
           variant: "destructive",
         });
       } else if (response.success) {
+        setSuccess(true);
+        setTimeout(() => setSuccess(false), 3000)
+        setFullname("");
+        setEmail("");
         toast({
           description: response.message,
           variant: "successful"
         });
-        setSuccess(true);
-        setFullname("");
-        setEmail("");
       }
     } catch (error) {
       console.error("Failed to submit the form:", error);
-      alert("Something went wrong. Please try again later.");
+      toast({
+        description: "Something went wrong. Please try again later.",
+        variant: "destructive"
+      });
     } finally {
       setIsSubmitting(false);
     }

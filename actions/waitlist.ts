@@ -1,12 +1,14 @@
-'use server'
+'use server';
 
-import { z } from 'zod'
+import { z } from 'zod';
+import { db } from '@/lib/firebaseConfig';
+import { collection, doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 
 // Define the validation schema
 const schema = z.object({
-  fullname: z.string().min(2, "Full name must be at least 2 characters"),
-  email: z.string().email("Invalid email address"),
-})
+  fullname: z.string().min(2, 'Full name must be at least 2 characters'),
+  email: z.string().email('Invalid email address'),
+});
 
 // Define the server action
 export const addToWaitlist = async (formData: FormData) => {
@@ -14,18 +16,40 @@ export const addToWaitlist = async (formData: FormData) => {
   const validatedFields = schema.safeParse({
     fullname: formData.get('fullname'),
     email: formData.get('email'),
-  })
+  });
 
-  // Return errors if validation fails
   if (!validatedFields.success) {
     return {
-      errors: validatedFields.error.flatten().fieldErrors,
-    }
+      error: validatedFields.error.flatten().fieldErrors,
+    };
   }
 
-  // Simulate a network delay
-  await new Promise(resolve => setTimeout(resolve, 1000))
+  const { fullname, email } = validatedFields.data;
 
-  // Return success response
-  return { success: true, message: "You've been added to the waitlist!" }
-}
+  try {
+    // Use the email as the document ID
+    const waitlistRef = doc(collection(db, 'clyne-waitlist'), email);
+
+    // Check if the document already exists
+    const docSnapshot = await getDoc(waitlistRef);
+    if (docSnapshot.exists()) {
+      return {
+        error: 'This email is already on the waitlist.',
+      };
+    }
+
+    // Add the document to Firestore
+    await setDoc(waitlistRef, {
+      fullname,
+      email,
+      createdAt: serverTimestamp(),
+    });
+
+    return { success: true, message: "You've been added to the waitlist!" };
+  } catch (error) {
+    console.error('Error adding to waitlist:', error);
+    return {
+      error: 'An error occurred while adding you to the waitlist. Please try again later.',
+    };
+  }
+};
