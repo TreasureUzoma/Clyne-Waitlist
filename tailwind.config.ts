@@ -13,7 +13,7 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
         purple: "#7900ff",
-        myBlue: "#5488cff",
+        myBlue: "#548cff",
         myGreen: "#93ffd8",
         lightGreen: "#ccffdc",
       },
@@ -23,7 +23,7 @@ export default {
       },
       backgroundColor: {
         purple: "#7900ff",
-        myBlue: "#5488cff",
+        myBlue: "#548cff",
         myGreen: "#93ffd8",
         lightGreen: "#ccffdc",
       },
