@@ -10,7 +10,7 @@ export function Badge() {
         as="button"
         className="dark:bg-black bg-white text-black dark:text-white flex items-center space-x-2"
       >
-        <span className="font-medium text-[0.7rem]">clyne.app</span>
+        <span className="font-medium text-[0.7rem]">Reserve Spot</span>
       </HoverBorderGradient>
     </div>
   );
