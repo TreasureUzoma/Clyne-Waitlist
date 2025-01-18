@@ -67,6 +67,7 @@ export const WaitlistForm = () => {
         setFullname("");
         setEmail("");
         toast({
+          title: "Hooray!",
           description: response.message,
           variant: "successful"
         });
