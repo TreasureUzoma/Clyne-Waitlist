@@ -25,8 +25,8 @@ export const WaitlistForm = () => {
 
     if (!fullname.trim()) {
       formErrors.fullname = ["Full Name is required."];
-    } else if (fullname.trim().length < 2) {
-      formErrors.fullname = ["Full Name must be at least 2 characters."];
+    } else if (fullname.trim().length < 3) {
+      formErrors.fullname = ["Full Name must be at least 3 characters."];
     }
 
     if (!email.trim()) {
@@ -85,8 +85,10 @@ export const WaitlistForm = () => {
   return (
     <>
       {success && <Confetti 
-        width={window.innerWidth}
-        height={window.innerHeight}
+        width={(window.innerWidth)}
+        numberOfPieces={500}
+        recycle={false}
+        height={(window.innerHeight)}
         colors={["#7900ff", "#93ffd8"]}
       />}
       <form
